@@ -3,7 +3,7 @@
 
     type T = $$Generic<Row>
 
-    export let handler: DataHandler<T>
+    export let handler
     export let orderBy: keyof T
     export let align: 'left' | 'right' | 'center' = 'left'
     export let rowSpan: number = 1
@@ -11,7 +11,7 @@
     const sort = handler.getSort()
     const update = () => {
         handler.sort(orderBy)
-        handler.invalidate()
+        if (handler.invalidate) handler.invalidate()
     }
 </script>
 

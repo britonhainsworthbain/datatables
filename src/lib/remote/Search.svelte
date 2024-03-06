@@ -3,7 +3,7 @@
 
 	type T = $$Generic<Row>
 
-	export let handler: DataHandler<T>
+	export let handler
 
 	let value = ''
 	let timeout: any
@@ -11,19 +11,29 @@
 	const search = () => {
 		handler.search(value)
 		clearTimeout(timeout)
+        if (!handler.invalidate) return;
 		timeout = setTimeout( () => {
             handler.invalidate()
 		}, 400)
 	}
 </script>
 
-<input
-	class={$$props.class ?? ''}
-	bind:value
-	placeholder={handler.i18n.search}
-	spellcheck="false"
-	on:input={search}
-/>
+<div class='searchContainer'>
+    <input
+        class={$$props.class ?? ''}
+        bind:value
+        placeholder={handler.i18n.search}
+        spellcheck="false"
+        on:input={search}
+    />
+    {#if value.length > 0}
+        <button class='clearSearchButton' on:click={() => {
+            value = '';
+            search();
+            }}
+        >x</button>
+    {/if}
+</div>
 
 <style>
 	input {
@@ -35,8 +45,7 @@
 		margin: 0;
 		height: 24px;
 		background: transparent;
-		width: 40%;
-		max-width: 176px;
+		width: 100%;
 		min-width: 96px;
 		transition: all, 0.1s;
 	}
@@ -47,4 +56,13 @@
 		color: #9e9e9e;
 		line-height: 24px;
 	}
+    .searchContainer {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .clearSearchButton {
+        padding: 0 5px;
+        border: solid 1px lightGray
+    }
 </style>
